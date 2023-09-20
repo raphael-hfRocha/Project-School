@@ -29,13 +29,16 @@ namespace ProjectSchool_API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(
-               x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")
-               ));
+                x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
+            );
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-            .AddJsonOptions(options =>
-             {
-                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-             });
+                .AddJsonOptions(options => {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
+
+            services.AddScoped<IRepository, Repository>();
+
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,10 +50,12 @@ namespace ProjectSchool_API
             }
             else
             {
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseMvc();
         }
     }
