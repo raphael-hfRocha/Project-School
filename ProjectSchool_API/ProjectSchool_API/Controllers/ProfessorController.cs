@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using ProjectSchool_API.Data;
 using ProjectSchool_API.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,40 +13,113 @@ namespace ProjectSchool_API.Controllers
     [ApiController]
     public class ProfessorController : Controller
     {
-
-        public ProfessorController()
+        public IRepository _repo { get; }
+        public ProfessorController(IRepository repo)
         {
-            
+            _repo = repo;
         }
 
 
-        // GET: api/<ValuesController>
         [HttpGet]
-        public int Get(int AlunoId)
+        public async Task<IActionResult> Get()
         {
-            Aluno aluno = new Aluno();
-            aluno.Id = AlunoId;
-            return aluno.Id;
+            try
+            {
+                var result = await _repo.GetAllProfessoresAsync(true);
+
+                return Ok(result);
+            }
+            catch (System.Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro de banco de dados");
+            }
+            return BadRequest();
         }
 
-        // POST api/<ValuesController>
+        [HttpGet("{ProfessorId}")]
+        public async Task<IActionResult> GetByProfessorId(int ProfessorId)
+        {
+            try
+            {
+                var result = await _repo.GetProfessorAsyncById(ProfessorId, true);
+
+                return Ok(result);
+            }
+            catch (System.Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro de banco de dados");
+            }
+        }
+
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post(Professor model)
         {
+            try
+            {
+                _repo.Add(model);
+
+                if (await _repo.SaveChangesAsync())
+                {
+                    return Created($"/api/professor/{model.Id}", model);
+                }
+            }
+            catch (System.Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro de banco de dados");
+            }
+            return BadRequest();
         }
 
-        // PUT api/<ValuesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{ProfessorId}")]
+        public async Task<IActionResult> Put(int ProfessorId, Professor model)
         {
+            try
+            {
+                var Professor = await _repo.GetProfessorAsyncById(ProfessorId, false);
+                if (Professor == null)
+                {
+                    return NotFound();
+                }
+
+                _repo.Update(model);
+
+                if(await _repo.SaveChangesAsync())
+                {
+                    return Created($"/api/professor/{model.Id}", model);
+                }
+            }
+            catch (System.Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro de banco de dados");
+            }
+            return BadRequest();
         }
 
         // DELETE api/<ValuesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{ProfessorId}")]
+        public async Task<IActionResult> Delete(int ProfessorId)
         {
+            try
+            {
+                var Professor = await _repo.GetProfessorAsyncById(ProfessorId, false);
+                if (Professor == null)
+                {
+                    return NotFound();
+                }
+
+                _repo.Delete(Professor);
+
+
+                if (await _repo.SaveChangesAsync())
+                {
+                    return Ok();
+                }
+            }
+            catch (System.Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro de banco de dados");
+            }
+            return BadRequest();
         }
-        /*
-        */
     }
 }
