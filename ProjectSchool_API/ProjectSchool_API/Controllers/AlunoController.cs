@@ -65,7 +65,7 @@ namespace ProjectSchool_API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Aluno model)
+        public async Task<IActionResult> post(Aluno model)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace ProjectSchool_API.Controllers
         }
 
         [HttpPut("{AlunoId}")]
-        public async Task<IActionResult> Put(int AlunoId, Aluno model)
+        public async Task<IActionResult> put(int AlunoId, Aluno model)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace ProjectSchool_API.Controllers
 
         // DELETE api/<ValuesController1>/5
         [HttpDelete("{AlunoId}")]
-        public async Task<IActionResult> Delete(int AlunoId)
+        public async Task<IActionResult> delete(int AlunoId)
         {
             try
             {

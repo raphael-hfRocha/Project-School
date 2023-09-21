@@ -10,7 +10,7 @@
 <script>
 import Nav from "./components/_nav/Nav.vue";
 export default {
-  name: "app",
+  name: "app", 
   components: {
     Nav
   },

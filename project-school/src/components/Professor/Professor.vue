@@ -1,21 +1,21 @@
 <template>
   <div>
-    <titulo texto="Professores" />
+    <titulo texto="Professores" btn-voltar="true"/>
     <div>
-      <input
+      <!-- <input
         type="text"
         placeholder="Nome do professor"
         v-model="nome"
         @keyup.enter="addprofessor()"
       />
-      <button class="btn btnInput" @click="addprofessor()">Adicionar</button>
+      <button class="btn btnInput" @click="addprofessor()">Adicionar</button> -->
     </div>
     <br />
     <table>
       <thead>
         <th>Cód.</th>
         <th style="width: 35%;">Nome</th>
-        <th style="width: 25%;">Alunos</th>
+        <th style="width: 20%;">Alunos</th>
       </thead>
       <tbody v-if="Professores.length">
         <tr v-for="(professor, index) in Professores" :key="index">
@@ -50,7 +50,7 @@ export default {
     };
   },
   created() {
-    this.$http.get('http://localhost:5001/api/aluno')
+    this.$http.get('http://localhost:5000/api/aluno')
     .then(res => res.json())
     .then(alunos => {
       this.Alunos = alunos;
@@ -61,25 +61,25 @@ export default {
 
   }, 
   methods: {
-    pegarQtdAlunosPorProfessor() {
-      this.Professores.forEach((professor, index) => {
-        professor = {
-          id: professor.id,
-          nome: professor.nome,
-          qtdAlunos: this.Alunos.filter(aluno => 
-            aluno.professor.id == professor.id
-          ).length
-        }
-        this.Professores[index] = professor;
-      });
-    },
+    // pegarQtdAlunosPorProfessor() {
+    //   this.Professores.forEach((professor, index) => {
+    //     professor = {
+    //       id: professor.id,
+    //       nome: professor.nome,
+    //       qtdAlunos: this.Alunos.filter(aluno => 
+    //         aluno.professor.id == professor.id
+    //       ).length
+    //     }
+    //     this.Professores[index] = professor;
+    //   });
+    // },
       carregarProfessores() {
         this.$http
-        .get("http://localhost:5001/api/professor")
+        .get("http://localhost:5000/api/professor")
         .then(res => res.json())
         .then(professor => {
           this.Professores = professor
-          this.pegarQtdAlunosPorProfessor();
+          // this.pegarQtdAlunosPorProfessor();
         }) 
       }
     },
@@ -97,7 +97,7 @@ input {
 }
 .btnDetalhes {
   font-size: 0.7em;
-  background-color: hsla(194, 100%, 50%, 0.992);
+  background-color: hsla(283, 100%, 50%, 0.992);
 }
 .btnInput {
   width: 150px;

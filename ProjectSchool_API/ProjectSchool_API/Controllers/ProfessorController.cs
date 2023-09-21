@@ -33,11 +33,10 @@ namespace ProjectSchool_API.Controllers
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Erro de banco de dados");
             }
-            return BadRequest();
         }
 
         [HttpGet("{ProfessorId}")]
-        public async Task<IActionResult> GetByProfessorId(int ProfessorId)
+        public async Task<IActionResult> getByProfessorId(int ProfessorId)
         {
             try
             {
